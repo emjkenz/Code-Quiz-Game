@@ -1,6 +1,8 @@
 # Code Quiz Game
 A timed quiz about CSS and Javascript
 
+Play the game [here](https://emjkenz.github.io/Code-Quiz-Game)
+
 ## User story
 ```
 AS A coding boot camp student
