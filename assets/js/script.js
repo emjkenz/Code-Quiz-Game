@@ -1,3 +1,4 @@
+// All the questions for the quiz
 var questions = [
     {
         question: "What does the acronym CSS stand for?",
@@ -62,54 +63,64 @@ var allScores = [];
 // Common elements
 var mainEl = document.querySelector('main');
 
+// Load the start screen
 startScreen();
 
+// Update the timer element
 function updateTimer () {
     document.querySelector('#time').innerHTML = timer;
 }
 
 function startScreen () {
+    // Update the timer back to 60
     updateTimer()
-    //loadScores();
 
     // If end screen exists, remove it
     if (document.querySelector('.end-screen')) {
         document.querySelector('.end-screen').remove();
     }
 
-    // if score list exists, remove it
+    // If score list exists, remove it
     if (document.querySelector('.all-scores')) {
         document.querySelector('.all-scores').remove();
     }
 
-    // if score list exists, remove it
+    // If score list exists, remove it
     if (!document.querySelector('.score-list')) {
         showScoresButton();
     }
 
+    // Create the start screen element
     var startContent = document.createElement('div');
     startContent.classList.add('start-content');
     mainEl.appendChild(startContent);
 
+    // Add the title
     var h1 = document.createElement('h1');
     h1.innerHTML = "Quiz Game";
     startContent.appendChild(h1);
 
+    // Add the instructional text
     var p = document.createElement('p');
     p.innerHTML = "Click the button to start the quiz";
     startContent.appendChild(p);
 
+    // Add the button to start the game
     var startBtn = document.createElement('button');
     startBtn.id = "start";
     startBtn.innerHTML = "Start";
     startContent.appendChild(startBtn);
 
+    // When the start button is clicked, remove the 
+    // start scren, start the timer, and start the game
     document.querySelector("#start").addEventListener('click', function () {
         document.querySelector('.start-content').remove();
         timers();
         startGame();
     });
 
+    // When "View All Scores" is clicked remove the
+    // button and load the score screen
     document.querySelector('.score-list').addEventListener('click', function () {
         document.querySelector('.score-list').remove();
         showAllScores();
@@ -120,15 +131,17 @@ function startScreen () {
 function endScreen() {
      // If question exists, remove it
     if (document.querySelector('.questions')) {
-        // remove question
         document.querySelector('.questions').remove();
     }
+    // Update the timer
     updateTimer()
 
+    // Create the end screen element
     var endscreendiv = document.createElement('div');
     endscreendiv.classList.add('end-screen');
     document.querySelector('main').appendChild(endscreendiv);
 
+    // Added some text to display your score
     var yourScore = document.createElement('p');
     yourScore.classList.add('your-score')
     yourScore.textContent = "Your score is "+score;
@@ -149,12 +162,14 @@ function endScreen() {
     document.querySelector('.end-screen').appendChild(saveBtn);
 
     // Add an event listener to the save button
+    // to save the players name
     document.querySelector("#save").addEventListener('click', function () {
         playername = document.querySelector("#name").value;
         saveGame();
     });
 }
 
+// Load the score from lcalstoreage if it exists
 function loadScores() {
     var savedScores = JSON.parse(localStorage.getItem("savedGame"));
     if (savedScores !== null) {
@@ -163,6 +178,7 @@ function loadScores() {
     updateScore();
 }
 
+// Save your score to localstorage
 function saveGame() {
     var savedGame = {
         name: playername,
@@ -173,6 +189,7 @@ function saveGame() {
     restart();
 }
 
+// Reset the game variables and load the Start Screen
 function restart () {
     questionNumber = 0;
     score = 0;
@@ -181,48 +198,49 @@ function restart () {
     startScreen();
 }
 
-function timers (clear) {
-    if (clear) {
-        clearInterval(time);
-    }
-    else {
-        var time = setInterval(function () {
-            timer--;
-            document.querySelector('#time').innerHTML = timer;
-            if (timer <= 0) {
-                // Prevent timer from going below 0
-                timer = 0;
-                clearInterval(time);
-                endScreen();
-            }
-        }, 1000);
-    }
+// Remove a second from the timer and if its 0
+// end the game and stop the timer
+function timers () {
+    var time = setInterval(function () {
+        timer--;
+        document.querySelector('#time').innerHTML = timer;
+        if (timer <= 0) {
+            // Prevent timer from going below 0
+            timer = 0;
+            clearInterval(time);
+            endScreen();
+        }
+    }, 1000);
 }
 
+// Add the scores to the "View All Scores" screen
 function updateScore () {
-
     if (allScores.length > 0) {
         for (let i = 0; i < allScores.length; i++) {
-             var scoreEl = document.createElement('li');
+            var scoreEl = document.createElement('li');
             scoreEl.classList.add('score');
             scoreEl.innerHTML = allScores[i].name+" - "+allScores[i].score;
             document.querySelector('.list-scores').appendChild(scoreEl);
         }
     }
-
-    
 }
 
+// Check if the answer is created
 function checkAnswer (answer) {
     var answerText = answer.innerHTML;
+    // If the answer is correct add a point to the score
+    // and reload the questions to update the question
     if (answerText === questions[questionNumber].correctAnswer) {
         questionNumber++;
         score++;
         document.querySelector('.feedback').innerHTML = "Correct!";
+        // Add a short delay before moving to the next screen to show "Correct!"
         setTimeout( function(){
             startGame();
         },300)
     } else {
+        // Remove 10s from the time if the answer is incorrect and
+        // display "Incorrect!"
         timer = timer - 10;
         document.querySelector('.feedback').innerHTML = "Incorrect!";
     }
@@ -231,7 +249,6 @@ function checkAnswer (answer) {
 function startGame () {
     // If question exists, remove it
     if (document.querySelector('.questions')) {
-        // remove question
         document.querySelector('.questions').remove();
     }
 
@@ -253,23 +270,28 @@ function startGame () {
         questionEl.innerHTML = questions[questionNumber].question;
         document.querySelector('main').appendChild(questionEl);
 
+        // Add a container to add the answer buttons
         var answersEl = document.createElement('div');
         answersEl.classList.add('answers'); 
         questionEl.appendChild(answersEl);
 
-        // create answers
+        // Create answer buttons
         questions[questionNumber].answers.forEach(answer => {
             var answerEl = document.createElement('button');
             answerEl.classList.add('answer');
             answerEl.innerHTML = answer;
             answersEl.appendChild(answerEl);
         });
+
+        // When the answer button is clicked check the text from the button
+        // against the answer variable
         document.querySelectorAll(".answer").forEach(function(answer){
             answer.addEventListener('click', function () {
             checkAnswer(this);
             });
         });
 
+        // Add a feedback element to show "Correct!" or "Incorrect!"
         var feedback = document.createElement('p');
         feedback.classList.add('feedback');
         questionEl.appendChild(feedback);
@@ -284,46 +306,50 @@ function startGame () {
 function showAllScores() {
     // If question exists, remove it
     if (document.querySelector('.questions')) {
-        // remove question
         document.querySelector('.questions').remove();
     }
     
     // If start content exists, remove it
     if (document.querySelector('.start-content')) {
-        // remove start content
         document.querySelector('.start-content').remove();
     }
 
+    // Create an element to add scores
     var allScoresDiv = document.createElement('div');
     allScoresDiv.classList.add('all-scores');
     document.querySelector('main').appendChild(allScoresDiv);
 
+    // Add the Score Screen title
     var h1 = document.createElement('h1');
     h1.innerHTML = "All Scores";
     allScoresDiv.appendChild(h1);
 
+    // Create an ordered list to add the scores
     var listAllScores = document.createElement('ol');
     listAllScores.classList.add('list-scores');
     allScoresDiv.appendChild(listAllScores);
 
+    // Add the list items to the ordered list
     loadScores()
 
+    // Create a restart button to play the game again
     var restartBtn = document.createElement('button');
     restartBtn.id = "restart";
     restartBtn.innerHTML = "Restart";
     allScoresDiv.appendChild(restartBtn);
 
+    // Create a clear button to reset the scores
     var clearBtn = document.createElement('button');
     clearBtn.id = "clear";
     clearBtn.innerHTML = "Clear";
     allScoresDiv.appendChild(clearBtn);
 
-    // Add an event listener to the restart button
+    // Go back to the Start Screen again after clicking Restart
     document.querySelector("#restart").addEventListener('click', function () {
         restart();
     });
 
-    // Add an event listener to the clear button
+    // Clear the local storage when the Clear button is clicked
     document.querySelector("#clear").addEventListener('click', function () {
         localStorage.clear();
         allScores = [];
@@ -331,8 +357,9 @@ function showAllScores() {
     });
 }
 
+// Create a button to "View All Scores"
 function showScoresButton() {
-    // create button with the class of .score-list with the text of "View High Scores"
+    // Create button with the class of .score-list with the text of "View High Scores"
     var scoreListBtn = document.createElement('button');
     scoreListBtn.classList.add('score-list');
     scoreListBtn.innerHTML = "View High Scores";
