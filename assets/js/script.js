@@ -231,19 +231,22 @@ function checkAnswer (answer) {
     // If the answer is correct add a point to the score
     // and reload the questions to update the question
     if (answerText === questions[questionNumber].correctAnswer) {
-        questionNumber++;
         score++;
+        // Display "Correct!"
         document.querySelector('.feedback').innerHTML = "Correct!";
-        // Add a short delay before moving to the next screen to show "Correct!"
-        setTimeout( function(){
-            startGame();
-        },300)
     } else {
-        // Remove 10s from the time if the answer is incorrect and
-        // display "Incorrect!"
+        // Remove 10s from the time if the answer is incorrect
         timer = timer - 10;
+        // Display "Incorrect!"
         document.querySelector('.feedback').innerHTML = "Incorrect!";
     }
+    //Move to the next question
+    questionNumber++;
+    
+    // Add a short delay before moving to the next screen to show "Correct!" or "Incorrect!"
+    setTimeout( function(){
+        startGame();
+    },300)
 }
 
 function startGame () {
