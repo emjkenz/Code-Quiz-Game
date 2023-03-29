@@ -266,7 +266,7 @@ function startGame () {
     }
 
     // Check if there are questions left
-    if (questionNumber < questions.length) {
+    if (questionNumber < questions.length && timer > 0) {
         // create question
         var questionEl = document.createElement('div');
         questionEl.classList.add('questions');
@@ -302,7 +302,7 @@ function startGame () {
     else {
         // Stop timer and set it to 0
         timer = 0;
-        clearInterval(time); 
+        clearInterval(time);
     }
 }
 
