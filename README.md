@@ -23,13 +23,15 @@ WHEN all questions are answered or the timer reaches 0
 THEN the game is over
 WHEN the game is over
 THEN I can save my initials and score
+```
+
 ## How to play
 1) Start the game and answer the questions to achieve a high score.
 2) You have 60 seconds to answer all the questions.
 3) If you get a question wrong you will loose 10 seconnds from the timer.
 4) The game is over if you answer all the questions or the timer reaches 0.
 5) Enter up to 3 initals to submit your score.
-```
+
 
 ## Screenshots
 
