@@ -216,7 +216,7 @@ function timers () {
 // Add the scores to the "View All Scores" screen
 function updateScore () {
     if (allScores.length > 0) {
-        for (let i = 0; i < allScores.length; i++) {
+        for (var i = 0; i < allScores.length; i++) {
             var scoreEl = document.createElement('li');
             scoreEl.classList.add('score');
             scoreEl.innerHTML = allScores[i].name+" - "+allScores[i].score;
